@@ -1,0 +1,308 @@
+
+/* ========================================
+   LAYOUT PRINCIPAL
+   ======================================== */
+
+.main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content:center;
+  padding: 15px;
+  gap: 10px;
+}
+
+.main > div:nth-child(1) {
+  flex-basis: 100%;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.chat_container,
+.card_container {
+  flex: 1;
+  min-width: 320px;
+  max-width: 480px;
+}
+
+.frase_container {
+  padding: 10px 10px;
+  margin-bottom: 0;
+  text-align: center;
+  font-size: 0.65em;
+  backdrop-filter: blur(10px);
+  animation: slideDown 0.6s ease;
+}
+
+.frase_container h1 {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 300;
+  letter-spacing: 1px;
+  line-height: 1.6;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   CHAT CONTAINER
+   ======================================== */
+
+.chat_container {
+  background: transparent;
+  border: 1px solid var(--cor_principal);
+  padding: 20px;
+  width: 480px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.chat_container:hover {
+  border-color: var(--cor_principal);
+  /* transform: translateY(-1px); */
+}
+
+.chat_container h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.messages_container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 360px;
+  overflow-y: scroll;
+  padding: 12px;
+  background-color: transparent;
+  overscroll-behavior: contain;
+}
+
+.messages_container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages_container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages_container::-webkit-scrollbar-thumb {
+  background: var(--cor_principal);
+}
+
+.messages_container::-webkit-scrollbar-thumb:hover {
+  background: var(--cor_principal);
+}
+
+.message {
+  padding: 10px 12px;
+  word-wrap: break-word;
+  max-width: 85%;
+  font-size: 0.95em;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user_message {
+  background: transparent;
+  align-self: flex-end;
+  color: var(--text);
+  border-bottom-right-radius: 2px;
+}
+
+.bot_message {
+  background: linear-gradient(135deg, rgba(80, 90, 120, 0.8), rgba(60, 70, 100, 0.8));
+  align-self: flex-start;
+  color: var(--text);
+  border-bottom-left-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.input_container {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--cor_principal);
+}
+
+.input_container textarea {
+  padding: 12px;
+  border: var(--cor_principal);
+  resize: none;
+  font-family: inherit;
+  font-size: 0.9em;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.input_container textarea:focus {
+  outline: none;
+  border-color: var(--cor_principal);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.input_container textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.input_container button {
+  padding: 12px 20px;
+  border: none;
+  background: var(--cor_principal);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95em;
+  transition: all 0.3s ease;
+}
+
+.input_container button:hover {
+  background: rgb(57, 100, 57);
+}   
+
+.input_container button:active {
+  transform: translateY(0);
+}
+
+/* ========================================
+   CLIMA - CARDS
+   ======================================== */
+
+.card_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  border: none;
+  font-size: 1em;
+}
+
+.weather_card {
+  background: transparent;
+  border: 1px solid var(--cor_principal);
+  padding: 18px;
+  width: 320px;
+  height: auto;
+  display: flex;
+  min-height: 500px;
+  flex-direction: column;
+  gap: 8px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.weather_card:hover {
+  border-color: var(--cor_principal);
+}
+
+.weather_card h3 {
+  margin: 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.weather_card p {
+  margin: 4px 0;
+  font-size: 0.9em;
+  color: var(--text);
+}
+
+.weather_icon {
+  font-size: 2.5em !important;
+  text-align: center;
+  margin: 8px 0;
+}
+
+.link_button {
+  padding: 10px 16px;
+  border: none;
+  background: var(--cor_principal);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: all 0.3s ease;
+}
+
+.link_button:hover {
+  background: rgb(57, 100, 57);
+}
+
+.link_button:active {
+  transform: translateY(1px);
+}
+/* ========================================
+   CAROUSEL CONTROLS
+   ======================================== */
+
+.carousel_controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+  padding: 10px 16px;
+  background-color: transparent;
+  border-radius: 8px;
+  border: 1px solid var(--cor_principal);
+}
+
+.carousel_controls button {
+  background: linear-gradient(135deg, rgba(100, 150, 200, 0.6), rgba(80, 120, 180, 0.6));
+  color: var(--text);
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.carousel_controls button:hover {
+  background: linear-gradient(135deg, rgba(100, 180, 255, 0.9), rgba(80, 150, 220, 0.9));
+  border-color: var(--cor_principal);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(100, 180, 255, 0.3);
+}
+
+.carousel_controls span {
+  color: var(--text);
+  font-size: 0.9em;
+  font-weight: 600;
+  min-width: 50px;
+  text-align: center;
+}

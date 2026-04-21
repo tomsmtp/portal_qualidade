@@ -1,0 +1,16 @@
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px); /* centraliza verticalmente */
+    padding: 20px;
+}
+
+.content {
+    font-size: clamp(1rem, 2vw, 1.35rem); /* escala com a tela */
+    border: 1px solid var(--cor_principal);
+    padding: clamp(16px, 3vw, 40px);      /* padding responsivo */
+    width: 100%;
+    max-width: 500px;                      /* não estica demais */
+    text-align: center;
+}
