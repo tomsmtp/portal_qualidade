@@ -26,6 +26,7 @@ export default function Home() {
         'cloud': '☁️',
         'cloudiness': '☁️',
         'Tempo nublado': '☁️',
+        'Tempo limpo': '🌞',
         'cloudly_day': '☀️☁️',
         'Parcialmente nublado': '☀️☁️',
         'cloudly_night': '🌙☁️',

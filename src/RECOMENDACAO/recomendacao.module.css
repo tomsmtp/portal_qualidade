@@ -30,7 +30,6 @@
 .btnSecondary,
 .btnSmall {
   border: none;
-  border-radius: 6px;
   font-size: 14px;
   padding: 10px 16px;
   cursor: pointer;
@@ -83,7 +82,6 @@
   overflow-x: auto;
   height: calc(100vh - 300px);
   border: 1px solid var(--border);
-  border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
@@ -147,7 +145,6 @@
   min-height: 32px;
   padding: 6px 8px;
   border: 2px solid var(--accent);
-  border-radius: 4px;
   background-color: var(--bg);
   color: var(--text);
   font-family: var(--sans);
@@ -196,7 +193,6 @@
   padding: 16px;
   background-color: rgba(211, 47, 47, 0.1);
   border-left: 4px solid #d32f2f;
-  border-radius: 4px;
   margin: 16px 0;
 }
 
@@ -207,7 +203,6 @@
   flex-wrap: wrap;
   padding: 16px;
   background-color: rgba(170, 59, 255, 0.05);
-  border-radius: 8px;
   border: 1px solid var(--accent-border);
 }
 
@@ -216,7 +211,6 @@
   min-width: 150px;
   padding: 10px 12px;
   border: 1px solid var(--accent-border);
-  border-radius: 6px;
   background-color: var(--bg);
   color: var(--text);
   font-family: var(--sans);

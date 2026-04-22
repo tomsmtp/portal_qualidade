@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import styles from './recomendacao.module.css';
+import { recomendacoes } from '../referecias_recomendacoes';
 
 export default function Recomendacao() {
     const [data, setData] = useState([]);
@@ -50,11 +51,15 @@ export default function Recomendacao() {
         setSelectedRows(newSelected);
     };
 
-    const toggleAllRows = () => {
-        if (selectedRows.size === data.length) {
+    const toggleAllRows = (filteredData) => {
+        const filteredIndices = filteredData.map(row => data.findIndex(item => item === row));
+        const allFiltered = new Set(filteredIndices);
+        
+        if (selectedRows.size === filteredIndices.length && 
+            filteredIndices.every(i => selectedRows.has(i))) {
             setSelectedRows(new Set());
         } else {
-            setSelectedRows(new Set(data.map((_, i) => i)));
+            setSelectedRows(allFiltered);
         }
     };
 
@@ -109,10 +114,22 @@ export default function Recomendacao() {
 
         try {
             setIsSaving(true);
-            const zonas = Array.from(selectedRows).map(i => data[i].ZONA);
+            
+            // Filtra apenas os selectedRows que estão visíveis na filteredData
+            const visibleSelectedRows = Array.from(selectedRows).filter(index => 
+                filteredData.some(row => data.findIndex(item => item === row) === index)
+            );
+
+            if (visibleSelectedRows.length === 0) {
+                alert('Nenhuma linha selecionada nos resultados filtrados');
+                setIsSaving(false);
+                return;
+            }
+
+            const zonas = visibleSelectedRows.map(i => data[i].ZONA);
             
             // Pega os dados da primeira linha selecionada como referência
-            const firstIndex = Array.from(selectedRows)[0];
+            const firstIndex = visibleSelectedRows[0];
             const firstRow = data[firstIndex];
 
             const response = await fetch(EDIT_MULTIPLE_URL, {
@@ -156,8 +173,19 @@ export default function Recomendacao() {
         return data.filter(row => {
             return Object.entries(filters).every(([field, filterValue]) => {
                 if (!filterValue) return true;
+                
+                // Divide por vírgula para permitir múltiplas buscas
+                const searchTerms = filterValue
+                    .split(',')
+                    .map(term => term.trim().toLowerCase())
+                    .filter(term => term.length > 0);
+                
+                if (searchTerms.length === 0) return true;
+                
                 const rowValue = String(row[field] || '').toLowerCase();
-                return rowValue.includes(filterValue.toLowerCase());
+                
+                // Retorna true se o valor da linha corresponde a algum dos termos
+                return searchTerms.some(term => rowValue.includes(term));
             });
         });
     };
@@ -170,7 +198,7 @@ export default function Recomendacao() {
     return (
         <div className={styles.container}>
             <h2>Recomendações</h2>
-            <p>Edite as recomendações e datas conforme necessário</p>
+            <h1> </h1>
 
             <div className={styles.toolbar}>
                 <button 
@@ -192,7 +220,7 @@ export default function Recomendacao() {
                     disabled={isSaving || selectedRows.size === 0}
                     className={styles.btnPrimary}
                 >
-                    Salvar Selecionados ({selectedRows.size})
+                    Salvar Selecionados ({Array.from(selectedRows).filter(i => filteredData.some(row => data.findIndex(item => item === row) === i)).length})
                 </button>
                 <button 
                     onClick={() => setFilters({ ZONA: '', BOLETIM: '', DATA: '', RECOMENDACAO: '' })}
@@ -240,8 +268,8 @@ export default function Recomendacao() {
                             <th>
                                 <input 
                                     type="checkbox" 
-                                    checked={selectedRows.size === data.length && data.length > 0}
-                                    onChange={toggleAllRows}
+                                    checked={filteredData.length > 0 && filteredData.every(row => selectedRows.has(data.findIndex(item => item === row)))}
+                                    onChange={() => toggleAllRows(filteredData)}
                                     disabled={isSaving}
                                 />
                             </th>
@@ -253,19 +281,20 @@ export default function Recomendacao() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredData.map((row, index) => {
-                            const isChanged = changedRows.has(`${index}`);
-                            const isSelected = selectedRows.has(index);
+                        {filteredData.map((row) => {
+                            const realIndex = data.findIndex(item => item === row);
+                            const isChanged = changedRows.has(`${realIndex}`);
+                            const isSelected = selectedRows.has(realIndex);
                             return (
                                 <tr 
-                                    key={index} 
+                                    key={realIndex} 
                                     className={`${isChanged ? styles.rowChanged : ''} ${isSelected ? styles.rowSelected : ''}`}
                                 >
                                     <td>
                                         <input 
                                             type="checkbox" 
                                             checked={isSelected}
-                                            onChange={() => toggleRowSelection(index)}
+                                            onChange={() => toggleRowSelection(realIndex)}
                                             disabled={isSaving}
                                         />
                                     </td>
@@ -273,13 +302,13 @@ export default function Recomendacao() {
                                     <td className={styles.cellReadonly}>{row.BOLETIM}</td>
                                     <td 
                                         className={styles.cellEditable}
-                                        onClick={() => setEditingCell(`${index}-DATA`)}
+                                        onClick={() => setEditingCell(`${realIndex}-DATA`)}
                                     >
-                                        {editingCell === `${index}-DATA` ? (
+                                        {editingCell === `${realIndex}-DATA` ? (
                                             <input 
                                                 type="date"
                                                 value={row.DATA || ''}
-                                                onChange={(e) => handleCellChange(index, 'DATA', e.target.value)}
+                                                onChange={(e) => handleCellChange(realIndex, 'DATA', e.target.value)}
                                                 autoFocus
                                                 onBlur={() => setEditingCell(null)}
                                                 className={styles.editInput}
@@ -290,23 +319,33 @@ export default function Recomendacao() {
                                     </td>
                                     <td 
                                         className={styles.cellEditable}
-                                        onClick={() => setEditingCell(`${index}-RECOMENDACAO`)}
+                                        onClick={() => setEditingCell(`${realIndex}-RECOMENDACAO`)}
                                     >
-                                        {editingCell === `${index}-RECOMENDACAO` ? (
-                                            <textarea 
-                                                value={row.RECOMENDACAO || ''}
-                                                onChange={(e) => handleCellChange(index, 'RECOMENDACAO', e.target.value)}
-                                                autoFocus
-                                                onBlur={() => setEditingCell(null)}
-                                                className={styles.editTextarea}
-                                            />
+                                        {editingCell === `${realIndex}-RECOMENDACAO` ? (
+                                            <>
+                                                <input 
+                                                    type="text"
+                                                    value={row.RECOMENDACAO || ''}
+                                                    onChange={(e) => handleCellChange(realIndex, 'RECOMENDACAO', e.target.value)}
+                                                    autoFocus
+                                                    onBlur={() => setEditingCell(null)}
+                                                    list={`recomendacoes-list-${realIndex}`}
+                                                    className={styles.editInput}
+                                                    placeholder="Selecione ou digite uma recomendação"
+                                                />
+                                                <datalist id={`recomendacoes-list-${realIndex}`}>
+                                                    {recomendacoes.map(r => (
+                                                        <option key={r.id} value={r.descricao}>{r.nome}</option>
+                                                    ))}
+                                                </datalist>
+                                            </>
                                         ) : (
                                             <span>{row.RECOMENDACAO}</span>
                                         )}
                                     </td>
                                     <td>
                                         <button 
-                                            onClick={() => saveSingleRow(index)}
+                                            onClick={() => saveSingleRow(realIndex)}
                                             disabled={!isChanged || isSaving}
                                             className={styles.btnSmall}
                                         >

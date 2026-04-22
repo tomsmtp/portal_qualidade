@@ -276,7 +276,6 @@
   margin-top: 8px;
   padding: 10px 16px;
   background-color: transparent;
-  border-radius: 8px;
   border: 1px solid var(--cor_principal);
 }
 
@@ -285,7 +284,6 @@
   color: var(--text);
   padding: 8px 12px;
   border: 1px solid transparent;
-  border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
